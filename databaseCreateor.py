@@ -128,7 +128,7 @@ def handleOnePersonImgs(input_dir,personName,output_dir):
 
 
 # handleImgs(input_dir,output_dir)
-handleOnePersonImgs(input_dir,'dangyuxuan',output_dir)
+# handleOnePersonImgs(input_dir,'dangyuxuan',output_dir)
 handleOnePersonImgs(input_dir,'dangbingchen',output_dir)
 
 # import matplotlib.pyplot as plt

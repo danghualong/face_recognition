@@ -39,14 +39,40 @@ def getFaceRegion(imgName):
 
         face = img[x1:y1,x2:y2]
         # 调整图片的对比度与亮度， 对比度与亮度值都取随机数，这样能增加样本的多样性
-        face = util.relight(face, random.uniform(0.5, 1.5), random.randint(-50, 50))
+        # face = util.relight(face, random.uniform(0.5, 1.5), random.randint(-50, 50))
 
         face = cv2.resize(face, (size,size))
         outputPath=os.path.join(pic_test_path,imgName)
         cv2.imwrite(outputPath, face)
     return outputPath
 
-def showLandmarks()
+def showLandmarks(imgName):
+    fileName=os.path.join(pic_test_origin_path,imgName)
+    img=cv2.imread(fileName)
+    # 转为灰度图片
+    gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # 使用detector进行人脸检测
+    faces = detector(gray_img,0)
+    if(len(faces)<=0):
+        return
+    
+    for i in range(len(faces)):
+        shapes=predictor(img,faces[i])
+        landmarks = np.matrix([[p.x, p.y] for p in shapes.parts()])
+    for idx, point in enumerate(landmarks):
+        # 68点的坐标
+        pos = (point[0, 0], point[0, 1])
+        # print(idx,pos)
+        # 利用cv2.circle给每个特征点画一个圈，共68个
+        cv2.circle(img, pos, 2, color=(0, 255, 0))
+        # 利用cv2.putText输出1-68
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        cv2.putText(img, str(idx+1), pos, font, 0.5, (0, 0, 255), 1,cv2.LINE_AA)
+
+    cv2.namedWindow("img", 2)
+    cv2.imshow("img", img)
+    cv2.waitKey(0)
+    
 
 # 返回单张图像的 128D 特征
 def return_128d_features(path_img):
@@ -84,7 +110,8 @@ def recognize(distances,persons):
 
 
 if __name__=='__main__':
-    img=getFaceRegion('zfy1.jpg')
+    # showLandmarks('dyx4.jpg')
+    img=getFaceRegion('dbc5.jpg')
     feat=return_128d_features(img)
     if(feat!=0):
         feat=np.array(feat)
